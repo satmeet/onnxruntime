@@ -81,6 +81,8 @@ jobs:
 
   steps:
 
+    - script: 'ls -al /data/models/opset8'
+    
     - ${{ if eq(parameters.BuildORT, true) }}:
 
       - ${{ if eq(parameters.RunDocker, true) }}: 
