@@ -81,7 +81,7 @@ jobs:
 
   steps:
 
-    - script: 'ls -al /data/models/opset8'
+    - script: 'ls -al /data/models/opset8/test_squeezenet'
     
     - ${{ if eq(parameters.BuildORT, true) }}:
 
