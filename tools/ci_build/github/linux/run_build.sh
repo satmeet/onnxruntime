@@ -67,5 +67,6 @@ else
         python3 $SCRIPT_DIR/../../build.py --build_dir /build \
             --config Release $COMMON_BUILD_ARGS $BUILD_EXTR_PAR
     fi
+    cat /build/Release/Testing/Temporary/LastTest.log
 fi
 
