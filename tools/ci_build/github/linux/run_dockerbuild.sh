@@ -166,6 +166,7 @@ wait $!
 
 #cat /onnxruntime_src/build/Release/Testing/Temporary/LastTest.log
 find -name LastTest.log 
+find -name onnxruntime_test_all
 ./onnxruntime_src/build/Linux/Release/onnxruntime_test_all --rerun-failed --output-on-failure
 
 EXIT_CODE=$?
