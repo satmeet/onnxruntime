@@ -164,8 +164,9 @@ $DOCKER_CMD run $RUNTIME -h $HOSTNAME $DOCKER_RUN_PARAMETER \
     -d $BUILD_DEVICE -x "$BUILD_EXTR_PAR" -o $BUILD_OS -y $YOCTO_VERSION &
 wait $!
 
-cat /onnxruntime_src/build/Release/Testing/Temporary/LastTest.log
-echo 'error log'
+#cat /onnxruntime_src/build/Release/Testing/Temporary/LastTest.log
+find -name LastTest.log 
+./onnxruntime_src/build/Linux/Release/onnxruntime_test_all --rerun-failed --output-on-failure
 
 EXIT_CODE=$?
 
