@@ -4722,6 +4722,7 @@ TEST_F(GraphTransformationTests, PropagateCastOpsTests) {
   }
 }
 
+#ifdef ENABLE_TRAINING
 #if defined(USE_CUDA) || defined(USE_ROCM)
 
 TEST_F(GraphTransformationTests, GatherInternalNodeReplacement) {
@@ -4751,6 +4752,7 @@ TEST_F(GraphTransformationTests, GatherInternalNodeReplacement) {
   EXPECT_EQ(op_to_count["com.microsoft.GatherInternal"], 1);
 }
 
+#endif
 #endif
 
 }  // namespace test
