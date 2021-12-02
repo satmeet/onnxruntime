@@ -27,7 +27,7 @@ class FusedAdam(torch.optim.Optimizer):
       * Fusion of the Adam update's elementwise operations
       * A multi-tensor apply launch that batches the elementwise updates applied to all the model's parameters into one or a few kernel launches.
 
-    Adam was been proposed in `Adam: A Method for Stochastic Optimization`_.
+    Adam was proposed in `Adam: A Method for Stochastic Optimization`_.
 
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining
@@ -58,23 +58,20 @@ class FusedAdam(torch.optim.Optimizer):
                  betas=(0.9,
                         0.999),
                  eps=1e-6,
-                 adam_w_mode=True,
+                 adam_w_mode=1,
                  weight_decay=0.,
-                 amsgrad=False,
-                 set_grad_none=False):
+                 set_grad_none=True):
 
         # The FusedAdam implementation is mathematically equivalent to
         # transformers AdamW. The input arguments also have the same defaults.
 
-        if amsgrad:
-            raise RuntimeError('FusedAdam does not support the AMSGrad variant.')
         defaults = dict(lr=lr,
                         bias_correction=bias_correction,
                         betas=betas,
                         eps=eps,
                         weight_decay=weight_decay)
         super(FusedAdam, self).__init__(params, defaults)
-        self._adam_w_mode = 1 if adam_w_mode else 0
+        self._adam_w_mode = adam_w_mode
         self._set_grad_none = set_grad_none
 
         # Skip buffer
