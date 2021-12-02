@@ -4394,7 +4394,7 @@ def test_ortmodule_fused_adam_optimizer_correctness():
         for pt_param, ort_param in zip(pt_model.parameters(), ort_model.parameters()):
             _test_helpers.assert_values_are_close(pt_param, ort_param, atol=1e-4, rtol=1e-5)
 
-def tests_ortmodule_fused_adam_optimizer_correctness_torch():
+def test_ortmodule_fused_adam_optimizer_correctness_torch():
 
     torch.manual_seed(8888)
 
@@ -4423,7 +4423,6 @@ def tests_ortmodule_fused_adam_optimizer_correctness_torch():
     ort_model.zero_grad()
 
     for step in range(1000):
-        print(step)
         x1 = torch.randn(N, D_in, device=device, dtype=torch.float32)
         x2 = copy.deepcopy(x1)
 
