@@ -8,7 +8,7 @@ $end = (Get-Date) + $expiredays
 
 $body = @{grant_type='client_credentials'
 client_id='bcb87687-5d9d-4c21-801e-317980c8b1d5'
-client_secret='$csc'
+client_secret=$csc
 scope='api://2227e307-9325-4dbe-9894-5c3b25d62a2d/.default'}
 $contentType = 'application/x-www-form-urlencoded'
 $res = Invoke-WebRequest -Method POST -Uri https://login.microsoftonline.com/cc38825a-ff99-423f-bdde-dd14d00e33b8/oauth2/v2.0/token -body $body -ContentType $contentType | ConvertFrom-Json
