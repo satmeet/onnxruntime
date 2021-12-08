@@ -578,7 +578,7 @@ class WindowsEnv : public Env {
 
     //The last argument is the size of the buffer pointed to by the lpBuffer parameter, including the null-terminating character, in characters.
     //If the function succeeds, the return value is the number of characters stored in the buffer pointed to by lpBuffer, not including the terminating null character.
-    //Therefore, the API call was successful kBufferSize should be larger than char_count.
+    //Therefore, If the function succeeds, kBufferSize should be larger than char_count.
     auto char_count = GetEnvironmentVariableA(var_name.c_str(), buffer.data(), kBufferSize);
     
     if (kBufferSize > char_count) {
