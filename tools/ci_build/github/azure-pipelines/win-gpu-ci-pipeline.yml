@@ -11,7 +11,7 @@ stages:
     - template: templates/win-gpu-ci.yml
       parameters:
         BuildConfig: 'RelWithDebInfo'
-        EnvSetupScript: setup_env_cuda_11.bat
+        EnvSetupScript: setup_env_cuda_11_4.bat
         buildArch: x64
         additionalBuildFlags: --enable_pybind --build_java --build_nodejs --use_cuda --cuda_version=11.4 --cuda_home="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4" --cudnn_home="C:\local\cudnn-11.4-windows-x64-v8.2.2.26\cuda" --gen_doc validate --enable_cuda_profiling --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES=52
         msbuildPlatform: x64
@@ -28,7 +28,7 @@ stages:
     - template: templates/win-gpu-ci.yml
       parameters:
         BuildConfig: 'RelWithDebInfo'
-        EnvSetupScript: setup_env_cuda_11.bat
+        EnvSetupScript: setup_env_cuda_11_4.bat
         buildArch: x64
         additionalBuildFlags: --enable_pybind --enable_training --use_cuda --cuda_version=11.4 --cuda_home="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4" --cudnn_home="C:\local\cudnn-11.4-windows-x64-v8.2.2.26\cuda" --cmake_extra_defines CMAKE_CUDA_ARCHITECTURES=52
         msbuildPlatform: x64
