@@ -38,6 +38,10 @@ parameters:
 - name: ORT_EP_NAME
   type: string
 
+- name: DocUpdateNeeded
+  displayName: Run Tests?
+  type: boolean
+  default: false
 
 jobs:
 - job: build_${{ parameters.job_name_suffix }}
@@ -47,7 +51,7 @@ jobs:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true    
     setVcvars: true
     ALLOW_RELEASED_ONNX_OPSET_ONLY: '0'
-    DocUpdateNeeded: false    
+    DocUpdateNeeded: ${{ parameters.DocUpdateNeeded }}    
   workspace:
     clean: all
   pool: 'Win-CPU-2019'

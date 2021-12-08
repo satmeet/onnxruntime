@@ -20,6 +20,7 @@ stages:
         RunOnnxRuntimeTests: ${{ parameters.RunOnnxRuntimeTests }}
         RunStaticCodeAnalysis: true
         ORT_EP_NAME: CUDA
+        DocUpdateNeeded: true
 
 
 - stage: training
