@@ -38,7 +38,7 @@ stages:
         RunStaticCodeAnalysis: true
         ORT_EP_NAME: CUDA
      
-- stage: training
+- stage: dml
   dependsOn: []
   jobs:
     - template: templates/win-gpu-ci.yml
