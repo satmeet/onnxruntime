@@ -574,13 +574,14 @@ class WindowsEnv : public Env {
     constexpr DWORD kBufferSize = 32767;
 
     // Create buffer to hold the result
-    char buffer[kBufferSize];
+    std::string buffer(kBufferSize, '\0');
 
-    auto char_count = GetEnvironmentVariableA(var_name.c_str(), buffer, kBufferSize);
+    auto char_count = GetEnvironmentVariableA(var_name.c_str(), buffer.data(), kBufferSize);
 
     // Will be > 0 if the API call was successful
+    assert(kBufferSize >= char_count);
     if (char_count) {
-      return std::string(buffer, buffer + char_count);
+      return buffer;
     }
 
     // TODO: Understand the reason for failure by calling GetLastError().
