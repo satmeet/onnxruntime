@@ -33,11 +33,6 @@ parameters:
 - name: RunStaticCodeAnalysis
   displayName: Run Static Code Analysis
   type: boolean
-  default: true
-
-- name: RunStaticCodeAnalysis
-  displayName: Run Static Code Analysis
-  type: boolean
   default: true  
   
 - name: ORT_EP_NAME
