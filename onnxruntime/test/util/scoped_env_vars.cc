@@ -45,7 +45,7 @@ Status GetEnvironmentVar(const std::string& name, optional<std::string>& value) 
 
   std::string buffer(kBufferSize, '\0');
 
-  const auto char_count = GetEnvironmentVariableA(name.c_str(), buffer.data(), kBufferSize);
+  const DWORD char_count = GetEnvironmentVariableA(name.c_str(), buffer.data(), kBufferSize);
   if (0 == char_count) {
     DWORD dwErr = GetLastError();
     if (ERROR_ENVVAR_NOT_FOUND == dwErr) {
@@ -58,6 +58,7 @@ Status GetEnvironmentVar(const std::string& name, optional<std::string>& value) 
     //Shouldn't reach here, 32767 is the max size.
     return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, "GetEnvironmentVariableA() failed: not enough memory");
   }
+  buffer.resize(char_count);
   value = buffer;
   return Status::OK();
 }

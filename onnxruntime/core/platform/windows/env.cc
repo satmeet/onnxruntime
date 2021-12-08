@@ -576,14 +576,17 @@ class WindowsEnv : public Env {
     // Create buffer to hold the result
     std::string buffer(kBufferSize, '\0');
 
+    //The last argument is the size of the buffer pointed to by the lpBuffer parameter, including the null-terminating character, in characters.
+    //If the function succeeds, the return value is the number of characters stored in the buffer pointed to by lpBuffer, not including the terminating null character.
+    //Therefore, the API call was successful kBufferSize should be larger than char_count.
     auto char_count = GetEnvironmentVariableA(var_name.c_str(), buffer.data(), kBufferSize);
-
-    // Will be > 0 if the API call was successful
-    assert(kBufferSize >= char_count);
-    if (char_count) {
+    
+    if (kBufferSize > char_count) {
+      buffer.resize(char_count);
       return buffer;
     }
 
+    // Else either the call was failed, or the buffer wasn't large enough.
     // TODO: Understand the reason for failure by calling GetLastError().
     // If it is due to the specified environment variable being found in the environment block,
     // GetLastError() returns ERROR_ENVVAR_NOT_FOUND.
