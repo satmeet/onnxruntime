@@ -56,24 +56,24 @@ struct ProviderHostCPU {
   virtual Status PrepareOutputShape(const Tensor* indices, const int64_t depth_val, const int64_t axis, int64_t& prefix_dim_size, int64_t& suffix_dim_size, std::vector<int64_t>& output_shape) = 0;
 
   // From cpu/tensor/slice.h
-  virtual Status SliceBase__PrepareForCompute(const std::vector<int64_t>& raw_starts,
-                                              const std::vector<int64_t>& raw_ends,
-                                              const std::vector<int64_t>& raw_axes,
+  virtual Status SliceBase__PrepareForCompute(const gsl::span<const int64_t>& raw_starts,
+                                              const gsl::span<const int64_t>& raw_ends,
+                                              const gsl::span<const int64_t>& raw_axes,
                                               SliceOp__PrepareForComputeMetadata& compute_metadata) = 0;
 
-  virtual Status SliceBase__PrepareForCompute(const std::vector<int64_t>& raw_starts,
-                                              const std::vector<int64_t>& raw_ends,
-                                              const std::vector<int64_t>& raw_axes,
-                                              const std::vector<int64_t>& raw_steps,
+  virtual Status SliceBase__PrepareForCompute(const gsl::span<const int64_t>& raw_starts,
+                                              const gsl::span<const int64_t>& raw_ends,
+                                              const gsl::span<const int64_t>& raw_axes,
+                                              const gsl::span<const int64_t>& raw_steps,
                                               SliceOp__PrepareForComputeMetadata& compute_metadata) = 0;
   virtual Status SliceBase__FillVectorsFromInput(const Tensor& start_tensor,
                                                  const Tensor& ends_tensor,
                                                  const Tensor* axes_tensor,
                                                  const Tensor* steps_tensor,
-                                                 std::vector<int64_t>& input_starts,
-                                                 std::vector<int64_t>& input_ends,
-                                                 std::vector<int64_t>& input_axes,
-                                                 std::vector<int64_t>& input_steps) = 0;
+                                                 TensorShapeVector& input_starts,
+                                                 TensorShapeVector& input_ends,
+                                                 TensorShapeVector& input_axes,
+                                                 TensorShapeVector& input_steps) = 0;
 
   virtual Status Einsum__Compute(const Einsum* p, OpKernelContext* context) = 0;
 
