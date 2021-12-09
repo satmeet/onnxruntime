@@ -48,7 +48,7 @@
 #include "core/optimizer/slice_elimination.h"
 #include "core/optimizer/transpose_optimizer/ort_transpose_optimizer.h"
 #include "core/optimizer/unsqueeze_elimination.h"
-#include "core/optimizer/gather_internal_replacement.h"
+#include "core/optimizer/gather_internal_unused_output_removal.h"
 #include "core/session/onnxruntime_session_options_config_keys.h"
 
 namespace onnxruntime {
@@ -82,7 +82,7 @@ std::vector<std::unique_ptr<RewriteRule>> GenerateRewriteRules(
       rules.push_back(std::make_unique<ConvMulFusion>());
       rules.push_back(std::make_unique<ConvBNFusion>());
       rules.push_back(std::make_unique<ReluQuantFusion>());
-      rules.push_back(std::make_unique<GatherInternalReplacement>());
+      rules.push_back(std::make_unique<GatherInternalUnusedOutputRemoval>());
       break;
 
     case TransformerLevel::Level2:
