@@ -9,6 +9,7 @@ class AttentionBase;
 }  // namespace contrib
 
 class GatherBase__Prepare;
+class ConcatBase_InlinedTensorsVector;
 class SliceOp__PrepareForComputeMetadata;  // Directly maps to SliceOp::PrepareForComputeMetadata
 class UnsqueezeBase__Prepare;              // Directly maps to UnsqueezeBase::Prepare
 
@@ -38,7 +39,7 @@ struct ProviderHostCPU {
                                               int& after_dims_including_split_axis, int& after_dims_excluding_split,
                                               std::vector<int64_t>& split_sizes) = 0;
   // From cpu/tensor/concatbase.h
-  virtual Status ConcatBase__PrepareForCompute(const ConcatBase* p, OpKernelContext* ctx, const std::vector<const Tensor*>& input_tensors, Prepare& prepare) = 0;
+  virtual Status ConcatBase__PrepareForCompute(const ConcatBase* p, OpKernelContext* ctx, const ConcatBase_InlinedTensorsVector& input_tensors, Prepare& prepare) = 0;
 
   // GatherElements
   virtual Status GatherElements__ValidateInputShapes(const TensorShape& input_data_shape, const TensorShape& indices_shape, int64_t axis) = 0;

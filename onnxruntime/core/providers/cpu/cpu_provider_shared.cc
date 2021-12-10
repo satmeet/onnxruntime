@@ -72,7 +72,8 @@ struct ProviderHostCPUImpl : ProviderHostCPU {
                                       std::vector<int64_t>& split_sizes) override { return p->SplitBase::PrepareForCompute(input_shape, num_outputs, axis, before_dims, after_dims_including_split_axis, after_dims_excluding_split, split_sizes); }
 
   // From cpu/tensor/concatbase.h (direct)
-  Status ConcatBase__PrepareForCompute(const ConcatBase* p, OpKernelContext* ctx, const std::vector<const Tensor*>& input_tensors, Prepare& prepare) override { return p->ConcatBase::PrepareForCompute(ctx, input_tensors, prepare); }
+  Status ConcatBase__PrepareForCompute(const ConcatBase* p, OpKernelContext* ctx, const ConcatBase_InlinedTensorsVector& input_tensors, Prepare& prepare) override { 
+    return p->ConcatBase::PrepareForCompute(ctx, reinterpret_cast<const ConcatBase::InlinedTensorsVector&>(input_tensors), prepare); }
 
   // GatherElements (direct)
   Status GatherElements__ValidateInputShapes(const TensorShape& input_data_shape, const TensorShape& indices_shape, int64_t axis) override { return GatherElements::ValidateInputShapes(input_data_shape, indices_shape, axis); }

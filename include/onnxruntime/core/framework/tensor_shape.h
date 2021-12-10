@@ -8,8 +8,12 @@
 #include <string>
 #include <cstring>
 #include <gsl/gsl>
-#include <absl/container/inlined_vector.h>
 #include "onnxruntime_config.h"
+
+#pragma warning(push)
+#pragma warning(disable:4127)
+#include <absl/container/inlined_vector.h>
+#pragma warning(pop)
 
 namespace onnxruntime {
 #ifdef __GNUC__

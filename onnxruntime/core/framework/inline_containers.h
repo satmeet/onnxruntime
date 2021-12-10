@@ -5,9 +5,13 @@
 
 #include <memory>
 #include <memory_resource>
+
+#pragma warning(push)
+#pragma warning(disable : 4127)
 #include <absl/container/inlined_vector.h>
 #include <absl/container/flat_hash_set.h>
 #include <absl/container/flat_hash_map.h>
+#pragma warning(pop)
 
 namespace onnxruntime {
 
