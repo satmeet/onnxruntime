@@ -59,8 +59,8 @@ TEST_F(CopyTest, Transpose4D) {
 
   double* dst = new double[numel];
 
-  std::vector<int64_t> dst_strides = {60, 5, 15, 1};
-  std::vector<int64_t> src_strides = {60, 20, 5, 1};
+  TensorShapeVector dst_strides = {60, 5, 15, 1};
+  TensorShapeVector src_strides = {60, 20, 5, 1};
   StridedCopy<double>(tp.get(), dst, dst_strides, {2, 3, 4, 5}, src, src_strides);
 
   // stride to access the dst tensor as if it were contiguous
@@ -94,8 +94,8 @@ TEST_F(CopyTest, Concat2D) {
     dst[i] = 0;
   }
 
-  std::vector<int64_t> dst_strides = {5, 1};
-  std::vector<int64_t> src_strides = {2, 1};
+  TensorShapeVector dst_strides = {5, 1};
+  TensorShapeVector src_strides = {2, 1};
   std::ptrdiff_t offset = 3;
   StridedCopy<double>(tp.get(), dst + offset, dst_strides, {6, 2}, src, src_strides);
 
@@ -116,9 +116,9 @@ TEST_F(CopyTest, Concat2D) {
 
 TEST_F(CopyTest, CoalesceTensorsTest) {
   {
-    std::vector<int64_t> strides_a{3, 1};
-    std::vector<int64_t> strides_b{3, 1};
-    std::vector<int64_t> shape{5, 3};
+    TensorShapeVector strides_a{3, 1};
+    TensorShapeVector strides_b{3, 1};
+    TensorShapeVector shape{5, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -128,9 +128,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
   }
 
   {
-    std::vector<int64_t> strides_a{3, 3, 1};
-    std::vector<int64_t> strides_b{3, 3, 1};
-    std::vector<int64_t> shape{5, 1, 3};
+    TensorShapeVector strides_a{3, 3, 1};
+    TensorShapeVector strides_b{3, 3, 1};
+    TensorShapeVector shape{5, 1, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -139,9 +139,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(15));
   }
   {
-    std::vector<int64_t> strides_a{3, 3, 3, 1};
-    std::vector<int64_t> strides_b{3, 3, 3, 1};
-    std::vector<int64_t> shape{1, 5, 1, 3};
+    TensorShapeVector strides_a{3, 3, 3, 1};
+    TensorShapeVector strides_b{3, 3, 3, 1};
+    TensorShapeVector shape{1, 5, 1, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -150,9 +150,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(15));
   }
   {
-    std::vector<int64_t> strides_a{3, 3, 3, 1};
-    std::vector<int64_t> strides_b{3, 3, 3, 1};
-    std::vector<int64_t> shape{1, 5, 1, 3};
+    TensorShapeVector strides_a{3, 3, 3, 1};
+    TensorShapeVector strides_b{3, 3, 3, 1};
+    TensorShapeVector shape{1, 5, 1, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -161,9 +161,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(15));
   }
   {
-    std::vector<int64_t> strides_a{320, 1};
-    std::vector<int64_t> strides_b{320, 1};
-    std::vector<int64_t> shape{20, 10};
+    TensorShapeVector strides_a{320, 1};
+    TensorShapeVector strides_b{320, 1};
+    TensorShapeVector shape{20, 10};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -172,9 +172,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(20, 10));
   }
   {
-    std::vector<int64_t> strides_a{320, 20, 1};
-    std::vector<int64_t> strides_b{320, 20, 1};
-    std::vector<int64_t> shape{10, 2, 20};
+    TensorShapeVector strides_a{320, 20, 1};
+    TensorShapeVector strides_b{320, 20, 1};
+    TensorShapeVector shape{10, 2, 20};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -183,9 +183,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(10, 40));
   }
   {
-    std::vector<int64_t> strides_a{3, 1};
-    std::vector<int64_t> strides_b{6, 1};
-    std::vector<int64_t> shape{5, 3};
+    TensorShapeVector strides_a{3, 1};
+    TensorShapeVector strides_b{6, 1};
+    TensorShapeVector shape{5, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -194,9 +194,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(5, 3));
   }
   {
-    std::vector<int64_t> strides_a{3, 1};
-    std::vector<int64_t> strides_b{6, 1};
-    std::vector<int64_t> shape{5, 3};
+    TensorShapeVector strides_a{3, 1};
+    TensorShapeVector strides_b{6, 1};
+    TensorShapeVector shape{5, 3};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 
@@ -205,9 +205,9 @@ TEST_F(CopyTest, CoalesceTensorsTest) {
     ASSERT_THAT(shape, testing::ElementsAre(5, 3));
   }
   {
-    std::vector<int64_t> strides_a{4, 1};
-    std::vector<int64_t> strides_b{1, 1};
-    std::vector<int64_t> shape{4, 1};
+    TensorShapeVector strides_a{4, 1};
+    TensorShapeVector strides_b{1, 1};
+    TensorShapeVector shape{4, 1};
 
     CoalesceDimensions({strides_a, strides_b}, shape);
 

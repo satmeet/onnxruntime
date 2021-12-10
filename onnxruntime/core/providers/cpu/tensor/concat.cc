@@ -233,12 +233,12 @@ Status ConcatBase::PrepareForCompute(OpKernelContext* ctx,
 }
 
 namespace {
-std::vector<int64_t> StridesForStack(const std::vector<int64_t>& full_strides, uint64_t axis) {
+TensorShapeVector StridesForStack(const TensorShapeVector& full_strides, uint64_t axis) {
   // if we are stacking, skip the dimension that will be stacked along in the output strides
   // (the striding for that dimension is handled by the initial_output_offset)
   auto num_dims = full_strides.size();
 
-  std::vector<int64_t> strides(num_dims - 1);
+  TensorShapeVector strides(num_dims - 1);
 
   for (size_t i = 0; i < num_dims - 1; i++) {
     auto read_i = (i >= axis) ? i + 1 : i;
