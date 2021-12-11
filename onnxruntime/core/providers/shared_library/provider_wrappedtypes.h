@@ -795,6 +795,19 @@ struct OpKernelInfo final {
     return GetAttrs<T>(name, tmp).IsOK() ? tmp : default_value;
   }
 
+  template<typename T>
+  Status GetAttrsAsSpan(const std::string& name, gsl::span<const T>& out) const;
+
+  Status GetAttrShape(const std::string& name, TensorShapeVector& out) const {
+    gsl::span<const int64_t> span;
+    Status status = this->GetAttrsAsSpan<int64_t>(name, span);
+    if (status.IsOK()) {
+      out.reserve(span.size());
+      out.assign(span.cbegin(), span.cend());
+    }
+    return status;
+  }
+
   bool TryGetConstantInput(int input_index, const Tensor** constant_input_value) const { return g_host->OpKernelInfo__TryGetConstantInput(this, input_index, constant_input_value); }
 
   const DataTransferManager& GetDataTransferManager() const noexcept { return g_host->OpKernelInfo__GetDataTransferManager(this); }
@@ -824,6 +837,9 @@ template <>
 inline Status OpKernelInfo::GetAttrs<float>(const std::string& name, std::vector<float>& values) const { return g_host->OpKernelInfo__GetAttrs(this, name, values); }
 template <>
 inline Status OpKernelInfo::GetAttrs<std::string>(const std::string& name, std::vector<std::string>& values) const { return g_host->OpKernelInfo__GetAttrs(this, name, values); }
+//template <>
+//inline Status OpKernelInfo::GetAttrsAsSpan<int64_t>(const std::string& name, gsl::span<const int64_t>& values) const { return g_host->OpKernelInfo__GetAttrsAsSpan(this, name, values); }
+
 
 class SessionState {
  public:

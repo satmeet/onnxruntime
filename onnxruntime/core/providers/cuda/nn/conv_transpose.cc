@@ -41,7 +41,7 @@ Status ConvTranspose<T>::DoConvTranspose(OpKernelContext* context, bool dynamic_
 
   const Tensor* X = context->Input<Tensor>(0);
   const TensorShape& x_shape = X->Shape();
-  auto x_dims = x_shape.GetDimsAsVector();
+  auto x_dims = x_shape.AsShapeVector();
   auto x_data = reinterpret_cast<const CudaT*>(X->template Data<T>());
 
   auto x_dimensions = X->Shape().NumDimensions();
@@ -52,7 +52,7 @@ Status ConvTranspose<T>::DoConvTranspose(OpKernelContext* context, bool dynamic_
   }
   const Tensor* W = context->Input<Tensor>(1);
   const TensorShape& w_shape = W->Shape();
-  std::vector<int64_t> w_dims = w_shape.GetDimsAsVector();
+  TensorShapeVector w_dims = w_shape.AsShapeVector();
   auto w_data = reinterpret_cast<const CudaT*>(W->template Data<T>());
 
   size_t num_inputs = OpKernel::Node().InputDefs().size();

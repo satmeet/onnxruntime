@@ -74,6 +74,16 @@ class OpNodeProtoHelper {
     return GetAttrs<T>(name, tmp).IsOK() ? tmp : default_value;
   }
 
+  MUST_USE_RESULT Status GetAttrShape(const std::string& name, TensorShapeVector& out) const {
+    gsl::span<const int64_t> span;
+    Status status = this->GetAttrsAsSpan<int64_t>(name, span);
+    if (status.IsOK()) {
+      out.reserve(span.size());
+      out.assign(span.cbegin(), span.cend());
+    }
+    return status;
+  }
+
   /**
      Get repeated attributes
   */

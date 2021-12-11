@@ -27,6 +27,13 @@ constexpr size_t kTensorShapeSmallBufferElementsSize = 5;
 
 using TensorShapeVector = absl::InlinedVector<int64_t, kTensorShapeSmallBufferElementsSize>;
 
+inline TensorShapeVector ToShapeVector(const gsl::span<const int64_t>& span) {
+  TensorShapeVector out;
+  out.reserve(span.size());
+  out.assign(span.cbegin(), span.cend());
+  return out;
+}
+
 class TensorShape {
   // We use negative numbers for unknown symbolic dimension. Each negative
   // number represents a unique symbolic dimension.
@@ -40,7 +47,7 @@ class TensorShape {
   TensorShape& operator=(TensorShape&& other) noexcept;
 
   TensorShape(gsl::span<const int64_t> dims);
-  TensorShape(const std::vector<int64_t>& dims) : TensorShape(gsl::make_span(dims)) {}
+  // TensorShape(const std::vector<int64_t>& dims) : TensorShape(gsl::make_span(dims)) {}
   TensorShape(const TensorShapeVector& dims) : TensorShape(gsl::make_span(dims)) {}
   TensorShape(const std::initializer_list<int64_t>& dims) : TensorShape(gsl::make_span(dims.begin(), dims.end())) {}
   TensorShape(const int64_t* dimension_sizes, size_t dimension_count) : TensorShape(gsl::span<const int64_t>(dimension_sizes, dimension_count)) {}

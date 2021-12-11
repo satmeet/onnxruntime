@@ -10,19 +10,23 @@
 #include "core/common/safeint.h"
 namespace onnxruntime {
 
-struct TensorPitches : std::vector<int64_t> {
+struct TensorPitches : TensorShapeVector {
   TensorPitches(const Tensor& tensor, size_t rank = 0) : TensorPitches(tensor.Shape(), rank) {}
   TensorPitches(const TensorShape& shape, size_t rank = 0) : TensorPitches(shape.GetDims(), rank) {}
-  TensorPitches(const std::vector<int64_t>& dims, size_t rank = 0)
-      : std::vector<int64_t>(std::max(rank, dims.size()), 0) {
+  //TensorPitches(const std::vector<int64_t>& dims, size_t rank = 0)
+  //    : std::vector<int64_t>(std::max(rank, dims.size()), 0) {
+  //  Calculate(gsl::span<int64_t>(data(), size()), gsl::make_span(dims));
+  //}
+  TensorPitches(const TensorShapeVector& dims, size_t rank = 0)
+      : TensorShapeVector(std::max(rank, dims.size()), 0) {
     Calculate(gsl::span<int64_t>(data(), size()), gsl::make_span(dims));
   }
-  TensorPitches(gsl::span<const int64_t> dims, size_t rank = 0)
-      : std::vector<int64_t>(std::max(rank, dims.size()), 0) {
+  TensorPitches(const gsl::span<const int64_t>& dims, size_t rank = 0)
+      : TensorShapeVector(std::max(rank, dims.size()), 0) {
     Calculate(gsl::span<int64_t>(data(), size()), dims);
   }
 
-  static bool Calculate(gsl::span<int64_t> p, gsl::span<const int64_t> dims) {
+  static bool Calculate(const gsl::span<int64_t>& p, const gsl::span<const int64_t>& dims) {
     // The pitches is the size of the next inner axis. Aka the amount to move by one of the next inner axis.
     // For a tensor with shape(2,3,4,5) the values would be: (3*4*5, 4*5, 5, 1)
     // Note that the outermost '2' is never used, as you never need to move by the entire size of the outermost axis

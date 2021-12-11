@@ -18,9 +18,9 @@ class CudnnConvolutionDescriptor final {
   ~CudnnConvolutionDescriptor();
 
   Status Set(size_t rank,
-             const std::vector<int64_t>& pads,
-             const std::vector<int64_t>& strides,
-             const std::vector<int64_t>& dilations,
+             const TensorShapeVector& pads,
+             const TensorShapeVector& strides,
+             const TensorShapeVector& dilations,
              int groups,
              cudnnConvolutionMode_t mode,
              cudnnDataType_t data_type);
@@ -119,7 +119,7 @@ struct CudnnConvState {
 
   // these would be recomputed if x/w dims change
   TensorShape y_dims;
-  std::vector<int64_t> y_dims_with_adjusted_pads;
+  TensorShapeVector y_dims_with_adjusted_pads;
   size_t workspace_bytes;
   decltype(AlgoPerfType().algo) algo;
   CudnnTensor x_tensor;
@@ -147,9 +147,9 @@ struct CudnnConvState {
 
   // Some properties needed to support asymmetric padded Conv nodes
   bool post_slicing_required;
-  std::vector<int64_t> slice_starts;
-  std::vector<int64_t> slice_ends;
-  std::vector<int64_t> slice_axes;
+  TensorShapeVector slice_starts;
+  TensorShapeVector slice_ends;
+  TensorShapeVector slice_axes;
 
   // note that conv objects are shared between execution frames, and a lock is needed to avoid multi-thread racing
   OrtMutex mutex;
@@ -196,10 +196,10 @@ Status SliceOutUnwantedOutputSection(cudaStream_t stream,
                                      const void* input_data,
                                      gsl::span<const int64_t> input_dims,
                                      void* output_data,
-                                     gsl::span<const int64_t> output_dims,
-                                     std::vector<int64_t> starts,
-                                     const std::vector<int64_t>& ends,
-                                     const std::vector<int64_t>& axes,
+                                     const gsl::span<const int64_t>& output_dims,
+                                     const gsl::span<const int64_t>& starts,
+                                     const gsl::span<const int64_t>&& ends,
+                                     const gsl::span<const int64_t>&& axes,
                                      size_t element_size);
 }  // namespace cuda
 }  // namespace onnxruntime

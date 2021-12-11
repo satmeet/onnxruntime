@@ -162,26 +162,26 @@ Status NchwcConv::Compute(OpKernelContext* context) const {
   const size_t nchwc_block_size = MlasNchwcGetBlockSize();
   ORT_ENFORCE((static_cast<size_t>(X_shape[1]) < nchwc_block_size) || ((X_shape[1] % nchwc_block_size) == 0));
 
-  std::vector<int64_t> kernel_shape;
+  TensorShapeVector kernel_shape;
   ORT_RETURN_IF_ERROR(conv_attrs_.ComputeKernelShape(W_shape, kernel_shape));
   if (kernel_shape.size() != 2) {
     return Status(common::ONNXRUNTIME, common::INVALID_ARGUMENT, "Unsupported convolution size.");
   }
 
-  std::vector<int64_t> pads(conv_attrs_.pads);
+  TensorShapeVector pads(conv_attrs_.pads);
   if (pads.empty()) {
     pads.resize(kernel_shape.size() * 2, 0);
   }
-  std::vector<int64_t> dilations(conv_attrs_.dilations);
+  TensorShapeVector dilations(conv_attrs_.dilations);
   if (dilations.empty()) {
     dilations.resize(kernel_shape.size(), 1);
   }
-  std::vector<int64_t> strides(conv_attrs_.strides);
+  TensorShapeVector strides(conv_attrs_.strides);
   if (strides.empty()) {
     strides.resize(kernel_shape.size(), 1);
   }
 
-  std::vector<int64_t> Y_dims;
+  TensorShapeVector Y_dims;
   Y_dims.insert(Y_dims.begin(), {X_shape[0], W_shape[0]});
   TensorShape input_shape = X->Shape().Slice(2);
   ORT_RETURN_IF_ERROR(conv_attrs_.InferOutputShape(input_shape, kernel_shape, strides, dilations, pads, Y_dims));
@@ -224,8 +224,8 @@ Status NchwcPoolBase::NchwcPool(OpKernelContext* context, MLAS_POOLING_KIND kind
   ORT_ENFORCE(X_shape.NumDimensions() == 4);
   ORT_ENFORCE((X_shape[1] % MlasNchwcGetBlockSize()) == 0);
 
-  std::vector<int64_t> pads = pool_attrs_.pads;
-  std::vector<int64_t> output_dims = pool_attrs_.SetOutputSize(X_shape, X_shape[1], &pads);
+  TensorShapeVector pads = pool_attrs_.pads;
+  TensorShapeVector output_dims = pool_attrs_.SetOutputSize(X_shape, X_shape[1], &pads);
   auto* Y = context->Output(0, output_dims);
 
   MlasNchwcPool(

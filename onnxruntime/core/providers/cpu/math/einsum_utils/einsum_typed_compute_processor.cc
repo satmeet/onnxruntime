@@ -10,7 +10,7 @@ void EinsumTypedComputeProcessor<T>::FinalizeOutput(const Tensor& candidate_outp
                                                     const std::vector<int64_t>& ordered_subscript_indices_in_candidate) {
   const std::vector<int64_t>& subscript_indices_to_output_indices =
       einsum_compute_preprocessor_.GetMappedSubscriptIndicesToOutputindices();
-  const auto& output_dims = einsum_compute_preprocessor_.GetOutputDims();
+  const auto output_dims = einsum_compute_preprocessor_.GetOutputDims();
   TensorShape output_shape = TensorShape(output_dims);
   const auto output_rank = output_dims.size();
   Tensor& output = *context_->Output(0, output_dims);
@@ -18,12 +18,12 @@ void EinsumTypedComputeProcessor<T>::FinalizeOutput(const Tensor& candidate_outp
   ORT_ENFORCE(candidate_output.Shape().Size() == output_shape.Size(),
               "Einsum op: The candidate output cannot be reshaped into the op's output");
 
-  const auto& candidate_output_dims = candidate_output.Shape().GetDims();
+  const auto candidate_output_dims = candidate_output.Shape().GetDims();
   const auto candidate_output_rank = candidate_output_dims.size();
 
   // This vector holds the shape of the candidate_output after removing the dims that have
   // been reduced in the final output
-  std::vector<int64_t> candidate_output_shape_without_reduced_dims;
+  TensorShapeVector candidate_output_shape_without_reduced_dims;
   candidate_output_shape_without_reduced_dims.reserve(candidate_output_rank);  // reserve upper bound
 
   // Identify the permutation required by the op's output
@@ -72,7 +72,7 @@ void EinsumTypedComputeProcessor<T>::FinalizeOutput(const Tensor& candidate_outp
 
 static bool IsTransposeReshapeForEinsum(const std::vector<size_t>& perm,
                                         gsl::span<const int64_t> input_dims,
-                                        std::vector<int64_t>& new_shape) {
+                                        TensorShapeVector& new_shape) {
   // As long as the dims with values > 1 stay in the same order, it's a reshape.
   // Example: Shape=(1,1,1024,4096) -> perm=(2,0,3,1).
   size_t last_permuted_axis = 0;
@@ -83,7 +83,7 @@ static bool IsTransposeReshapeForEinsum(const std::vector<size_t>& perm,
       return false;
     last_permuted_axis = perm[i];
   }
-  new_shape = std::vector<int64_t>(input_dims.begin(), input_dims.end());
+  new_shape.assign(input_dims.cbegin(), input_dims.cend());
   for (size_t i = 0; i < perm.size(); ++i) {
     new_shape[i] = input_dims[perm[i]];
   }
@@ -192,14 +192,14 @@ std::unique_ptr<Tensor> EinsumTypedComputeProcessor<T>::PairwiseOperandProcess(c
   }
 
   // Permutate the left operand so that the axes order go like this: [lro, lo, reduce_dims, ro]
-  std::vector<int64_t> reshaped_dims;
+  TensorShapeVector reshaped_dims;
   std::vector<size_t> left_permutation;
   left_permutation.reserve(lro.size() + lo.size() + reduce_dims.size() + ro.size());
   left_permutation.insert(left_permutation.end(), lro.begin(), lro.end());
   left_permutation.insert(left_permutation.end(), lo.begin(), lo.end());
   left_permutation.insert(left_permutation.end(), reduce_dims.begin(), reduce_dims.end());
   left_permutation.insert(left_permutation.end(), ro.begin(), ro.end());
-  if (EinsumOp::IsTransposeRequired(current_left ? current_left->Shape().GetDims().size() : left_dims.size(),
+  if (EinsumOp::IsTransposeRequired(current_left ? current_left->Shape().NumDimensions() : left_dims.size(),
                                     left_permutation)) {
     if (current_left && IsTransposeReshapeForEinsum(left_permutation,
                                                     current_left->Shape().GetDims(),
@@ -249,7 +249,7 @@ std::unique_ptr<Tensor> EinsumTypedComputeProcessor<T>::PairwiseOperandProcess(c
   //  dim_value of `lo` dims,
   // `1` for each of the `reduce_dims`,
   // dim_value of `ro` dims]
-  std::vector<int64_t> output_dims;
+  TensorShapeVector output_dims;
   output_dims.reserve(lro.size() + lo.size() + reduce_dims.size() + ro.size());
   for (size_t i = 0; i < lro.size(); ++i) {
     output_dims.push_back(left_dims[lro[i]]);
